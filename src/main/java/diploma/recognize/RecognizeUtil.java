@@ -1,10 +1,10 @@
-package diploma.service;
+package diploma.recognize;
 
-import diploma.RecognizeResultDto;
+import diploma.RecognizeResult;
 import diploma.repository.DataPointRepository;
 import diploma.model.*;
-import diploma.repository.KeyRepository;
 import diploma.repository.SongRepository;
+import jdk.internal.util.xml.impl.Input;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -16,24 +16,21 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by IO on 28.11.2016.
  */
 @Service
 @EnableTransactionManagement(proxyTargetClass = true)
-public class RecognizeUtil {
+public class RecognizeUtil implements AudioService {
 
     @Autowired
     private DataPointRepository dataPointRepository;
-    @Autowired
-    private KeyService keyService;
+
     @Autowired
     private  SongRepository songRepository;
+
 
     private final int UPPER_LIMIT = 300;
     private final int LOWER_LIMIT = 40;
@@ -62,7 +59,7 @@ public class RecognizeUtil {
     }
 
 
-    protected double[][] getHighsCores(Complex[][] results) {
+    private double[][] getHighsCores(Complex[][] results) {
         assert results != null;
         double[][] highsCores = new double[results.length][5];
         for (int i = 0; i < results.length; i++) {
@@ -97,49 +94,6 @@ public class RecognizeUtil {
         return (p4 - (p4 % FUZ_FACTOR)) * 100000000 + (p3 - (p3 % FUZ_FACTOR))
                 * 100000 + (p2 - (p2 % FUZ_FACTOR)) * 100
                 + (p1 - (p1 % FUZ_FACTOR));
-    }
-
-    public RecognizeResultDto recognize(File file) {
-        PCM2PCMConversionProvider conversionProvider = new PCM2PCMConversionProvider();
-        AudioInputStream in = null;
-        try {
-            in = AudioSystem.getAudioInputStream(file);
-        } catch (UnsupportedAudioFileException | IOException e) {
-            e.printStackTrace();
-        }
-        assert in != null;
-        AudioFormat baseFormat = in.getFormat();
-        System.out.println(baseFormat.toString());
-        AudioFormat decoded = getFormat();
-        System.out.println(decoded.toString());
-
-        if (!conversionProvider.isConversionSupported(getFormat(),
-                baseFormat)) {
-            System.out.println("Conversion is not supported");
-        }
-
-        AudioInputStream din = conversionProvider.getAudioInputStream(decoded, in);
-        int count = 0;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] buffer = new byte[(int) 1024];
-        do {
-            try {
-                count = din.read(buffer, 0, 1024);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (count > 0) {
-                out.write(buffer, 0, count);
-            } else {
-                System.out.println();
-            }
-        } while (count > 0);
-
-
-        Complex[][] result = makeSpectrum(out);
-        List<KeyPoint> keyPointList = determineKeyPoints(result);
-        RecognizeResultDto recognizeResultDto = matchSong(keyPointList);
-        return recognizeResultDto;
     }
 
     protected AudioInputStream decodeAddingFile(File file) throws IOException, UnsupportedAudioFileException {
@@ -186,53 +140,7 @@ public class RecognizeUtil {
         return out;
     }
 
-    public void addSong(File file) throws IOException, UnsupportedAudioFileException {
-        AudioInputStream in = AudioSystem.getAudioInputStream(file);
-        AudioFormat baseFormat = in.getFormat();
-
-
-        System.out.println(baseFormat.toString());
-
-        AudioFormat decodedFormat = new AudioFormat(
-                AudioFormat.Encoding.PCM_SIGNED,
-                baseFormat.getSampleRate(), 16, baseFormat.getChannels(),
-                baseFormat.getChannels() * 2, baseFormat.getSampleRate(),
-                false);
-
-        PCM2PCMConversionProvider conversionProvider = new PCM2PCMConversionProvider();
-        AudioInputStream din = AudioSystem.getAudioInputStream(decodedFormat, in);
-
-        if (conversionProvider.isConversionSupported(getFormat(),
-                decodedFormat)) {
-            System.out.println("Conversion is not supported");
-        }
-
-        System.out.println(decodedFormat.toString());
-
-        AudioInputStream outDin = conversionProvider.getAudioInputStream(getFormat(), din);
-        int count = 0;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] buffer = new byte[(int) 1024];
-        do {
-            try {
-                count = outDin.read(buffer, 0, 1024);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (count > 0) {
-                out.write(buffer, 0, count);
-            } else {
-                System.out.println();
-            }
-        } while (count > 0);
-        Complex[][] result = makeSpectrum(out);
-        List<KeyPoint> keyPointList = determineKeyPoints(result);
-        saveSong(keyPointList, file.getName());
-        System.out.println();
-    }
-
-
-    protected Complex[][] makeSpectrum(ByteArrayOutputStream out) {
+    private Complex[][] makeSpectrum(ByteArrayOutputStream out) {
         byte audio[] = out.toByteArray();
 
         final int totalSize = audio.length;
@@ -282,10 +190,10 @@ public class RecognizeUtil {
     }
 
     @Transactional
-    private RecognizeResultDto matchSong(List<KeyPoint> keyPoints) {
+    private RecognizeResult matchSong(List<KeyPoint> keyPoints) {
         Map<Song, Map<Integer, Integer>> matchMap = new HashMap<>();
         keyPoints.forEach((keyPoint -> {
-            List<DataPoint> dataPoints = dataPointRepository.getByKey(keyPoint.getKey());
+            List<DataPoint> dataPoints = dataPointRepository.getDataPointsByKey(keyPoint.getKey());
             assert dataPoints != null;
             if (dataPoints.size() > 0) {
                 dataPoints.forEach((dataPoint -> {
@@ -329,23 +237,110 @@ public class RecognizeUtil {
                 bestSong = song;
             }
         }
-        return new RecognizeResultDto(bestSong);
+        return new RecognizeResult(bestSong);
     }
 
     @Transactional(rollbackFor = Exception.class)
     private void saveSong(List<KeyPoint> keyPoints, String songTitle) {
         Song song = new Song(songTitle);
-        assert songRepository != null;
-        assert keyService !=null;
-        songRepository.save(song);
+        List<DataPoint> points = new ArrayList<>();
         keyPoints.forEach((keyPoint -> {
-            Key key = keyService.getById(keyPoint.getKey());
-            if (key == null) {
-                key = new Key(keyPoint.getKey());
-                keyService.create(key);
-            }
-            DataPoint point = new DataPoint(song, keyPoint.getTime(), key);
-            dataPointRepository.save(point);
+            DataPoint point = new DataPoint(song, keyPoint.getTime(), keyPoint.getKey());
+            points.add(point);
         }));
+        dataPointRepository.save(points);
+    }
+
+
+
+
+    @Override
+    public RecognizeResult recognizeSong(File inputSample) {
+        PCM2PCMConversionProvider conversionProvider = new PCM2PCMConversionProvider();
+        AudioInputStream in = null;
+        try {
+            in = AudioSystem.getAudioInputStream(inputSample);
+        } catch (UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
+        assert in != null;
+        AudioFormat baseFormat = in.getFormat();
+        System.out.println(baseFormat.toString());
+        AudioFormat decoded = getFormat();
+        System.out.println(decoded.toString());
+
+        if (!conversionProvider.isConversionSupported(getFormat(),
+                baseFormat)) {
+            System.out.println("Conversion is not supported");
+        }
+
+        AudioInputStream din = conversionProvider.getAudioInputStream(decoded, in);
+        int count = 0;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[(int) 1024];
+        do {
+            try {
+                count = din.read(buffer, 0, 1024);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (count > 0) {
+                out.write(buffer, 0, count);
+            } else {
+                System.out.println();
+            }
+        } while (count > 0);
+
+
+        Complex[][] result = makeSpectrum(out);
+        List<KeyPoint> keyPointList = determineKeyPoints(result);
+        return matchSong(keyPointList);
+    }
+
+    @Override
+    public void addSong(File file) throws IOException, UnsupportedAudioFileException {
+
+
+        AudioInputStream in = AudioSystem.getAudioInputStream(file);
+        AudioFormat baseFormat = in.getFormat();
+
+
+        System.out.println(baseFormat.toString());
+
+        AudioFormat decodedFormat = new AudioFormat(
+                AudioFormat.Encoding.PCM_SIGNED,
+                baseFormat.getSampleRate(), 16, baseFormat.getChannels(),
+                baseFormat.getChannels() * 2, baseFormat.getSampleRate(),
+                false);
+
+        PCM2PCMConversionProvider conversionProvider = new PCM2PCMConversionProvider();
+        AudioInputStream din = AudioSystem.getAudioInputStream(decodedFormat, in);
+
+        if (conversionProvider.isConversionSupported(getFormat(),
+                decodedFormat)) {
+            System.out.println("Conversion is not supported");
+        }
+
+        System.out.println(decodedFormat.toString());
+
+        AudioInputStream outDin = conversionProvider.getAudioInputStream(getFormat(), din);
+        int count = 0;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[(int) 1024];
+        do {
+            try {
+                count = outDin.read(buffer, 0, 1024);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (count > 0) {
+                out.write(buffer, 0, count);
+            } else {
+                System.out.println();
+            }
+        } while (count > 0);
+        Complex[][] result = makeSpectrum(out);
+        List<KeyPoint> keyPointList = determineKeyPoints(result);
+        saveSong(keyPointList, file.getName());
     }
 }

@@ -1,6 +1,6 @@
-package diploma;
+package diploma.controller;
 
-import diploma.service.RecognizeUtil;
+import diploma.recognize.RecognizeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
+import java.io.InputStream;
 
 /**
  * Created by IO on 11.12.2016.
@@ -30,6 +30,7 @@ public class SongController {
     @RequestMapping(value = "/addSong", method = RequestMethod.POST)
     @ResponseBody
     public String addSong(@RequestParam("file")MultipartFile file) throws IOException, UnsupportedAudioFileException {
+        InputStream inputStream = file.getInputStream();
         File addedFile = new File("C:\\Users\\IO\\Desktop\\" + file.getOriginalFilename());
         file.transferTo(addedFile);
         recognizeUtil.addSong(addedFile);

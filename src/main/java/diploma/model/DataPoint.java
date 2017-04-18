@@ -1,24 +1,25 @@
 package diploma.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by IO on 09.12.2016.
  */
 @Entity
 @Table(name = "datapoint")
-public class DataPoint implements DataPointInterface{
+public class DataPoint implements Serializable{
 
     private Long id;
     private Integer time;
     private Song song;
-    private Key key;
+    private Long key;
 
     public DataPoint(){
 
     }
 
-    public DataPoint(Song song, Integer time, Key key) {
+    public DataPoint(Song song, Integer time, Long key) {
         this.time = time;
         this.song = song;
         this.key = key;
@@ -47,7 +48,7 @@ public class DataPoint implements DataPointInterface{
         this.time = time;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="songid")
     public Song getSong() {
         return song;
@@ -57,13 +58,11 @@ public class DataPoint implements DataPointInterface{
         this.song = song;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "key")
-    public Key getKey() {
+    public Long getKey() {
         return key;
     }
 
-    public void setKey(Key key) {
+    public void setKey(Long key) {
         this.key = key;
     }
 
@@ -87,5 +86,15 @@ public class DataPoint implements DataPointInterface{
         result = 31 * result + (song != null ? song.hashCode() : 0);
         result = 31 * result + (key != null ? key.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "DataPoint{" +
+                "id=" + id +
+                ", time=" + time +
+                ", song=" + song +
+                ", key=" + key +
+                '}';
     }
 }

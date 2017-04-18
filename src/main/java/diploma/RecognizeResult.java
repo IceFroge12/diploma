@@ -5,14 +5,14 @@ import diploma.model.Song;
 /**
  * Created by IO on 28.11.2016.
  */
-public class RecognizeResultDto {
+public class RecognizeResult {
 
     private Song song;
 
-    public RecognizeResultDto() {
+    public RecognizeResult() {
     }
 
-    public RecognizeResultDto(Song song) {
+    public RecognizeResult(Song song) {
         this.song = song;
     }
 
@@ -26,7 +26,7 @@ public class RecognizeResultDto {
 
     @Override
     public String toString() {
-        return "RecognizeResultDto{" +
+        return "RecognizeResult{" +
                 "song=" + song +
                 '}';
     }

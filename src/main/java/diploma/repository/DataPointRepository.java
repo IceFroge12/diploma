@@ -13,8 +13,6 @@ import java.util.List;
  * Created by IO on 11.12.2016.
  */
 @Repository
-public interface DataPointRepository extends CrudRepository<DataPoint, Long> {
-
-    @Query("select dt from DataPoint  dt where dt.key.key = :key")
-    List<DataPoint> getByKey(@Param("key") Long key);
+public interface DataPointRepository extends JpaRepository<DataPoint, Long> {
+    List<DataPoint> getDataPointsByKey(Long key);
 }
