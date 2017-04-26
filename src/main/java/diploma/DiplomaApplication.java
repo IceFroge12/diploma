@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"diploma.model"})
 @EnableAutoConfiguration
+@EntityScan(basePackages = {"diploma."})
 public class DiplomaApplication {
 
 	public static void main(String[] args) {

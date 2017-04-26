@@ -1,10 +1,11 @@
 package diploma.recognize;
 
-import diploma.RecognizeResult;
+import diploma.dto.RecognizeResult;
 import diploma.repository.DataPointRepository;
 import diploma.model.*;
+import diploma.repository.KeyPoint;
 import diploma.repository.SongRepository;
-import jdk.internal.util.xml.impl.Input;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -23,7 +24,7 @@ import java.util.*;
  */
 @Service
 @EnableTransactionManagement(proxyTargetClass = true)
-public class RecognizeUtil implements AudioService {
+public class RecognizeUtil implements AudioRecognizeProvider {
 
     @Autowired
     private DataPointRepository dataPointRepository;
@@ -229,20 +230,24 @@ public class RecognizeUtil implements AudioService {
                 if (entry.getValue() > bestCountForSong) {
                     bestCountForSong = entry.getValue();
                 }
-                System.out.println("Time offset = " + entry.getKey()
-                        + ", Count = " + entry.getValue());
+//                System.out.println("Time offset = " + entry.getKey()
+//                        + ", Count = " + entry.getValue());
             }
+            System.out.println(bestCountForSong);
             if (bestCountForSong > bestCount) {
                 bestCount = bestCountForSong;
                 bestSong = song;
             }
         }
-        return new RecognizeResult(bestSong);
+        if (bestCount < 10){
+            return new RecognizeResult(null);
+        }else {
+            return new RecognizeResult(bestSong);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
-    private void saveSong(List<KeyPoint> keyPoints, String songTitle) {
-        Song song = new Song(songTitle);
+    private void saveSong(List<KeyPoint> keyPoints, Song song) {
         List<DataPoint> points = new ArrayList<>();
         keyPoints.forEach((keyPoint -> {
             DataPoint point = new DataPoint(song, keyPoint.getTime(), keyPoint.getKey());
@@ -250,9 +255,6 @@ public class RecognizeUtil implements AudioService {
         }));
         dataPointRepository.save(points);
     }
-
-
-
 
     @Override
     public RecognizeResult recognizeSong(File inputSample) {
@@ -298,7 +300,7 @@ public class RecognizeUtil implements AudioService {
     }
 
     @Override
-    public void addSong(File file) throws IOException, UnsupportedAudioFileException {
+    public void addSong(File file, Song song) throws IOException, UnsupportedAudioFileException {
 
 
         AudioInputStream in = AudioSystem.getAudioInputStream(file);
@@ -341,6 +343,6 @@ public class RecognizeUtil implements AudioService {
         } while (count > 0);
         Complex[][] result = makeSpectrum(out);
         List<KeyPoint> keyPointList = determineKeyPoints(result);
-        saveSong(keyPointList, file.getName());
+        saveSong(keyPointList, song);
     }
 }

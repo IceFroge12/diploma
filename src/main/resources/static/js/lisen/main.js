@@ -45,8 +45,25 @@ var recorder;
                 var request = new XMLHttpRequest();
                 request.onreadystatechange = function () {
                     if (request.readyState == 4 && request.status == 200) {
-                        var songTItle = JSON.parse(request.response).song.title;
-                        document.getElementById("song_title").innerHTML = songTItle;
+                        let song = JSON.parse(request.response).song;
+                        if (song !== null){
+                            let songTItle = song.title;
+                            let bandTitle = song.band.title;
+
+                            let albumTitle = '';
+                            let album = song.album;
+                            if(album !== null){
+                                albumTitle = album.title;
+                            }
+                            document.getElementById("song_title").innerHTML = songTItle;
+                            document.getElementById("album_title").innerHTML = albumTitle;
+                            document.getElementById("band_title").innerHTML = bandTitle;
+                        }else {
+                            document.getElementById("song_title").innerHTML = 'Oops... Song not found';
+                        }
+
+
+
                         setTimeout(function () {
                             animatePath(shzPathEl, shzEl.getAttribute('data-path-player'), 450, [0.7, 0, 0.3, 1], function () {
                                 // show audio player

@@ -154,6 +154,153 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.2</version>
+				<configuration>
+					<installDirectory>target</installDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>v7.9.0</nodeVersion>
+							<npmVersion>4.2.0</npmVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>bower install</id>
+						<goals>
+							<goal>bower</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<!--<execution>-->
+						<!--<id>webpack build</id>-->
+						<!--<goals>-->
+							<!--<goal>webpack</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes/static</outputDirectory>
+							<resources>
+								<resource>
+									<directory>node_modules/jquery/dist/</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>node_modules/angular/</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>node_modules/angular-animate/</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>node_modules/angular-resource/</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>node_modules/angular-route/</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>node_modules/angular-sanitize/</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>node_modules/angular-ui-bootstrap/dist</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+										<include>**/*.css</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>node_modules/ng-toast/dist</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+										<include>**/*.css</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>bower_components/ngprogress/build</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+										<include>**/*.css</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>node_modules/bootstrap/dist/css</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.css</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>node_modules/bootstrap/dist/js</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>**/*.js</include>
+									</includes>
+								</resource>
+
+
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
@@ -190,6 +337,7 @@
 			<url>https://repo.spring.io/milestone</url>
 			<snapshots>
 				<enabled>false</enabled>
+
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>

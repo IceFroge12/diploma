@@ -12,13 +12,18 @@ public class HomeController {
 
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/recognizePage", method = RequestMethod.GET)
     public String home(){
         return "lisen";
     }
 
-    @RequestMapping(value = "/song", method = RequestMethod.GET)
-    public String song(){
-        return "addSong";
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String admin(){
+        return "index";
     }
+
+//    @RequestMapping(value = "/song", method = RequestMethod.GET)
+//    public String song(){
+//        return "save";
+//    }
 }

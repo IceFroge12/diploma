@@ -53,11 +53,11 @@
             </button>
             <!-- Music player -->
             <div class="player player--hidden">
-                <img class="player__cover" th:src="@{/img/lisen/Gramatik.jpg}" alt="Water 4 The Soul by Gramatik"/>
+                <img class="player__cover" th:src="@{/img/lisen/Gramatik.jpg}" alt=""/>
                 <div class="player__meta">
                     <h3 class="player__track" id="song_title"></h3>
                     <h3 class="player__album">
-                        <span class="player__album-name">Water 4 The Soul</span> by <span class="player__artist">Gramatik</span>
+                        <span class="player__album-name" id = "album_title"></span> by <span class="player__artist" id="band_title"></span>
                     </h3>
                     <div class="player__controls">
                         <button class="player__control icon icon--skip-back" aria-label="Previous song"></button>

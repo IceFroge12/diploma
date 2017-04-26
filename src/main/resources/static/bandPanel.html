@@ -1,0 +1,101 @@
+<toast></toast>
+<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+    <div ng-controller="bandController">
+        <div class="controlButtonGroup">
+            <button type="button" class="btn btn-secondary buttons-copy buttons-html5" data-toggle="modal"
+                    data-target="#myModal"><span>Add new</span></button>
+            <button type="button" class="btn btn-secondary buttons-copy buttons-html5" ng-click="delete()"><span>Delete selected</span></button>
+        </div>
+
+        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Formation year</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Formation year</th>
+                <th>Edit</th>
+            </tr>
+            </tfoot>
+            <tbody>
+            <tr ng-repeat="band in bands">
+                <td>
+                        <label><input type="checkbox" value="" ng-click="markRecord(band)"></label>
+                </td>
+                <td>{{band.title}}</td>
+                <td>{{band.formationYear}}</td>
+                <td>
+                    <button type="button" class="btn btn-secondary buttons-copy buttons-html5" data-toggle="modal"
+                            data-target="#myModa2" ng-click="markEdit(band)"><span>Edit</span></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <form name="newBandForm" ng-submit="addBand()">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Add new band</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="title">Title:</label>
+                                <input type="text" class="form-control" id="title" ng-model="band.title">
+                            </div>
+                            <div class="form-group">
+                                <label for="formation_year">Formation year:</label>
+                                <input type="text" class="form-control" id="formation_year" ng-model="band.formationYear">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" data-dismiss="modal"
+                                    ng-click="addBand()">Add
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="myModa2" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <form name="newBandForm" ng-submit="editBand()">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Edit band</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="title_edit">Title:</label>
+                                <input type="text" class="form-control" id="title_edit" ng-model="edited.title">
+                            </div>
+                            <div class="form-group">
+                                <label for="formation_year_edit">Formation year:</label>
+                                <input type="text" class="form-control" id="formation_year_edit" ng-model="edited.formationYear">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" data-dismiss="modal"
+                                    ng-click="editBand()">Add
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+

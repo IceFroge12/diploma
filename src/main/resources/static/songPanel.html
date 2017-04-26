@@ -1,0 +1,156 @@
+<script type="text/ng-template" id="customTemplate.html">
+    <a>
+        <span>{{match.model.title}}</span>
+    </a>
+</script>
+<toast></toast>
+
+<script type="text/ng-template" id="customPopupTemplate.html">
+    <div class="custom-popup-wrapper"
+         ng-style="{top: position().top+'px', left: position().left+'px'}"
+         style="display: block;"
+         ng-show="isOpen() && !moveInProgress"
+         aria-hidden="{{!isOpen()}}">
+        <p class="message">select location from drop down.</p>
+
+        <ul class="dropdown-menu" role="listbox">
+            <li class="uib-typeahead-match" ng-repeat="match in matches track by $index"
+                ng-class="{active: isActive($index) }"
+                ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">
+                <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
+            </li>
+        </ul>
+    </div>
+</script>
+
+
+<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+    <div ng-controller="songController">
+        <div class="controlButtonGroup">
+            <button type="button" class="btn btn-secondary buttons-copy buttons-html5" data-toggle="modal"
+                    data-target="#myModal"><span>Add new</span></button>
+            <button type="button" class="btn btn-secondary buttons-copy buttons-html5" ng-click="delete()"><span>Delete selected</span>
+            </button>
+        </div>
+        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Edit</th>
+            </tr>
+            </tfoot>
+            <tbody>
+            <tr ng-repeat="s in songs">
+                <td><label><input type="checkbox" value="" ng-click="markRecord(s)"></label></td>
+                <td>{{s.title}}</td>
+                <td>{{s.band.title}}</td>
+                <td>{{s.album.title}}</td>
+                <td>
+                    <button type="button" class="btn btn-secondary buttons-copy buttons-html5" data-toggle="modal"
+                            data-target="#myModal2" ng-click="markEdit(s)"><span>Edit</span></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add song</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="title">Title:</label>
+                            <input type="text" class="form-control" id="title" ng-model="song.title">
+                        </div>
+                        <div class="form-group">
+                            <label for="band">Band:</label>
+                            <input type="text" id="band" ng-model="asyncSelectedBand"
+                                   placeholder="Type band title"
+                                   uib-typeahead="state as state.title for state in getBands($viewValue)"
+                                   typeahead-template-url="customTemplate.html" typeahead-loading="loadingLocations"
+                                   typeahead-no-results="noResults" class="form-control">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="album">Album:</label>
+                            <input type="album" id="album" ng-model="asyncSelectedAlbum"
+                                   placeholder="Type album title"
+                                   uib-typeahead="album as album.title for album in getAlbums($viewValue)"
+                                   typeahead-template-url="customTemplate.html" typeahead-loading="loadingLocations"
+                                   typeahead-no-results="noResults" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="songFile">Song:</label>
+                            <input type="file" name="songFile" id="songFile"
+                                   onchange="angular.element(this).scope().uploadedFile(this)"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="addSong()">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModal2" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Edit song</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="title_edit">Title:</label>
+                            <input type="text" class="form-control" id="title_edit" ng-model="edited.title">
+                        </div>
+                        <div class="form-group">
+                            <label for="band_edit">Band:</label>
+                            <input type="text" id="band_edit" ng-model="edited.band"
+                                   placeholder="Type band title"
+                                   uib-typeahead="state as state.title for state in getBands($viewValue)"
+                                   typeahead-template-url="customTemplate.html" typeahead-loading="loadingLocations"
+                                   typeahead-no-results="noResults" class="form-control">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="album_edit">Album:</label>
+                            <input type="text" id="album_edit" ng-model="edited.album"
+                                   placeholder="Type album title"
+                                   uib-typeahead="album as album.title for album in getAlbums($viewValue)"
+                                   typeahead-template-url="customTemplate.html" typeahead-loading="loadingLocations"
+                                   typeahead-no-results="noResults" class="form-control">
+                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label for="songFile">Song:</label>-->
+                            <!--<input type="file" name="songFile" id="songFile"-->
+                                   <!--onchange="angular.element(this).scope().uploadedFile(this)"/>-->
+                        <!--</div>-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="editSong()">
+                                <Edit></Edit>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

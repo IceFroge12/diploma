@@ -1,4 +1,4 @@
-package diploma;
+package diploma.dto;
 
 import diploma.model.Song;
 
@@ -8,6 +8,7 @@ import diploma.model.Song;
 public class RecognizeResult {
 
     private Song song;
+
 
     public RecognizeResult() {
     }

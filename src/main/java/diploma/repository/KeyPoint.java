@@ -1,4 +1,4 @@
-package diploma.model;
+package diploma.repository;
 
 /**
  * Created by IO on 11.12.2016.
