@@ -15,7 +15,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.0.0.BUILD-SNAPSHOT</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/> 
 	</parent>
 
 	<properties>
@@ -57,29 +57,29 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.tritonus</groupId>
-			<artifactId>jl1</artifactId>
-			<scope>system</scope>
-			<version>1.0</version>
-			<systemPath>${basedir}/lib/jl1.0.1.jar</systemPath>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.tritonus</groupId>-->
+			<!--<artifactId>jl1</artifactId>-->
+			<!--<scope>system</scope>-->
+			<!--<version>1.0</version>-->
+			<!--<systemPath>${basedir}/lib/jl1.0.1.jar</systemPath>-->
+		<!--</dependency>-->
 
-		<dependency>
-			<groupId>org.tritonus</groupId>
-			<artifactId>jtransforms</artifactId>
-			<scope>system</scope>
-			<version>1.0</version>
-			<systemPath>${basedir}/lib/jtransforms-2.4.jar</systemPath>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.tritonus</groupId>-->
+			<!--<artifactId>jtransforms</artifactId>-->
+			<!--<scope>system</scope>-->
+			<!--<version>1.0</version>-->
+			<!--<systemPath>${basedir}/lib/jtransforms-2.4.jar</systemPath>-->
+		<!--</dependency>-->
 
-		<dependency>
-			<groupId>org.tritonus</groupId>
-			<artifactId>mp3spi1</artifactId>
-			<scope>system</scope>
-			<version>1.0</version>
-			<systemPath>${basedir}/lib/mp3spi1.9.5.jar</systemPath>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.tritonus</groupId>-->
+			<!--<artifactId>mp3spi1</artifactId>-->
+			<!--<scope>system</scope>-->
+			<!--<version>1.0</version>-->
+			<!--<systemPath>${basedir}/lib/mp3spi1.9.5.jar</systemPath>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.tritonus</groupId>
@@ -97,44 +97,45 @@
 			<systemPath>${basedir}/lib/tritonus_share.jar</systemPath>
 		</dependency>
 
-		<dependency>
-			<groupId>org.encoder</groupId>
-			<artifactId>encoder</artifactId>
-			<scope>system</scope>
-			<version>1.0</version>
-			<systemPath>${basedir}/lib/jave-1.0.2.jar</systemPath>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.encoder</groupId>-->
+			<!--<artifactId>encoder</artifactId>-->
+			<!--<scope>system</scope>-->
+			<!--<version>1.0</version>-->
+			<!--<systemPath>${basedir}/lib/jave-1.0.2.jar</systemPath>-->
+		<!--</dependency>-->
 
 
-		<dependency>
-			<groupId>org.encoder</groupId>
-			<artifactId>vorbisspi</artifactId>
-			<scope>system</scope>
-			<version>1.0</version>
-			<systemPath>${basedir}/lib/vorbisspi1.0.3.jar</systemPath>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.encoder</groupId>-->
+			<!--<artifactId>vorbisspi</artifactId>-->
+			<!--<scope>system</scope>-->
+			<!--<version>1.0</version>-->
+			<!--<systemPath>${basedir}/lib/vorbisspi1.0.3.jar</systemPath>-->
+		<!--</dependency>-->
 
-		<dependency>
-			<groupId>org.encoder</groupId>
-			<artifactId>jorbis</artifactId>
-			<scope>system</scope>
-			<version>1.0</version>
-			<systemPath>${basedir}/lib/jorbis-0.0.15.jar</systemPath>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.encoder</groupId>-->
+			<!--<artifactId>jorbis</artifactId>-->
+			<!--<scope>system</scope>-->
+			<!--<version>1.0</version>-->
+			<!--<systemPath>${basedir}/lib/jorbis-0.0.15.jar</systemPath>-->
+		<!--</dependency>-->
 
-		<dependency>
-			<groupId>org.encoder</groupId>
-			<artifactId>jogg</artifactId>
-			<scope>system</scope>
-			<version>1.0</version>
-			<systemPath>${basedir}/lib/jogg-0.0.7.jar</systemPath>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.encoder</groupId>-->
+			<!--<artifactId>jogg</artifactId>-->
+			<!--<scope>system</scope>-->
+			<!--<version>1.0</version>-->
+			<!--<systemPath>${basedir}/lib/jogg-0.0.7.jar</systemPath>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>com.googlecode.soundlibs</groupId>
 			<artifactId>tritonus-share</artifactId>
 			<version>0.3.7.4</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.googlecode.soundlibs</groupId>
 			<artifactId>mp3spi</artifactId>
