@@ -36,6 +36,6 @@ public class DataPointServiceImpl implements DataPointService {
     @Override
     public List<DataPoint> save(List<DataPoint> dataPointList) {
         Assert.notNull(dataPointList, "DataPoint list must not be null");
-        return dataPointRepository.save(dataPointList);
+        return dataPointRepository.saveAll(dataPointList);
     }
 }

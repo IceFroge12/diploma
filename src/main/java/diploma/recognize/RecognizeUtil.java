@@ -253,7 +253,7 @@ public class RecognizeUtil implements AudioRecognizeProvider {
             DataPoint point = new DataPoint(song, keyPoint.getTime(), keyPoint.getKey());
             points.add(point);
         }));
-        dataPointRepository.save(points);
+        dataPointRepository.saveAll(points);
     }
 
     @Override

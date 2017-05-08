@@ -1,0 +1,21 @@
+{
+  "name": "diploma",
+  "description": "diploma project",
+  "main": "index.html",
+  "authors": [
+    "Yuriy <georgius12@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/IceFroge12/diploma",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ngprogress": "^1.1.3"
+  }
+}

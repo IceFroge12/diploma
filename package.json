@@ -1,0 +1,32 @@
+{
+  "name": "diploma",
+  "version": "1.0.0",
+  "description": "diploma project",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IceFroge12/diploma.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IceFroge12/diploma/issues"
+  },
+  "homepage": "https://github.com/IceFroge12/diploma#readme",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-animate": "^1.6.4",
+    "angular-resource": "^1.6.4",
+    "angular-route": "^1.6.4",
+    "angular-sanitize": "^1.6.4",
+    "angular-ui-bootstrap": "^2.5.0",
+    "bootstrap": "^4.0.0-alpha.6",
+    "bower": "^1.8.0",
+    "jquery": "^3.2.1",
+    "ng-toast": "^2.0.0",
+    "webpack": "^2.4.1"
+  }
+}

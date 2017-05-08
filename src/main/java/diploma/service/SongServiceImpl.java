@@ -41,12 +41,12 @@ public class SongServiceImpl implements SongService {
     @Override
     public void delete(Long id) {
         Assert.notNull(id, "Id must not be null");
-        songRepository.delete(id);
+        songRepository.deleteById(id);
     }
 
     @Override
     public void delete(List<Song> songList) {
         Assert.notNull(songList, "Songs list must not be null");
-        songRepository.delete(songList);
+        songRepository.deleteInBatch(songList);
     }
 }

@@ -44,7 +44,7 @@ public class BandController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") Long id){
-        bandRepository.delete(id);
+        bandRepository.deleteById(id);
     }
 
     @RequestMapping(method = RequestMethod.PUT)

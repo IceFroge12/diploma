@@ -30,8 +30,7 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public Album getAlbum(Long id) {
         Assert.notNull(id, "Id must not be null");
-        albumRepository.findOne(id);
-        return null;
+        return albumRepository.findById(id).get();
     }
 
     @Override
@@ -44,13 +43,13 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public void delete(Long id) {
         Assert.notNull(id, "Album must not be null");
-        albumRepository.delete(id);
+        albumRepository.deleteById(id);
     }
 
     @Override
     public void delete(List<Album> albumList) {
         Assert.notNull(albumList, "Album list must not be null");
-        albumRepository.delete(albumList);
+        albumRepository.deleteAll(albumList);
     }
 
     @Override
